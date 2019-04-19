@@ -1,0 +1,11 @@
+package schemas;
+
+
+option java_package = "com.segmetics.ng.protocol.message";
+//type 000000
+
+message AckProto {
+    required string msgId = 1;
+    required int32 version = 2;
+    optional string payload = 3;
+}

@@ -1,0 +1,1113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>智能家居-测试</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0;" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="./js/jquery.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/json.js"></script>
+<script language="javascript" type="text/javascript">
+	var serverurl="/data/";
+	var hostId = "D0DF9AB1B1E7"
+	$("document").ready(function(){
+	});
+
+    function tip(strTip){
+        $("#errortip").text(strTip); 
+    }
+	
+	function scanCommon(methodName){      
+		var jsonstr="";
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome",method:' + methodName + ',param:{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){
+			 	tip(JSON.stringify(data));
+			 }
+			});
+	 }
+
+	function scanHost(){      
+		scanCommon("scanHost");	
+	 }
+
+	function scanBlueTooth(){      
+		scanCommon("scanBlueTooth");
+	 }
+	function scanCam(){      
+		scanCommon("scanCam");
+	 }
+
+	function scanDLNA(){      
+		scanCommon("scanDLNA");
+	 }
+
+function readAllConfig(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"readAllConfig","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+
+	function writeAllConfig(){      
+		var jsonstr='{"globalmodes" : {},"health" : {},"host" : "'+hostId +'","room" : {"rooms" : []}, "safety" : {}, "version" : "2014-09-28 14:23:22"}';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"writeAllConfig","param":' + jsonstr + '}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+	 
+
+	function readRTData(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"z-1B7C4501004B12001234"},{"addr":"z-347D4501004B12001234"},{"addr":"z-3B794501004B12001234"},{"addr":"z-6A7B4501004B12001134"},{"addr":"z-CD7D4501004B12001234"}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"readRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+
+	function writeRTData_Open(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"z-347D4501004B12001234","type":"Light2","value":{"state2":"1"}},{"addr":"z-557B4501004B12001234","type":"Light3","value":{"state3":"1"}}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"writeRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	strTip = strTip + ",device:"+"z-347D4501004B12001234,z-557B4501004B1200123,z-557B4501004B1200123";
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+	function writeRTData_Close(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"z-347D4501004B12001234","type":"Light2","value":{"state2":"0"}},{"addr":"z-557B4501004B12001234","type":"Light3","value":{"state3":"0"}}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"writeRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+                strTip = strTip + ",device:"+"Light2:z-347D4501004B12001234,Light3:z-557B4501004B12001234";
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+
+function readHouseRTData(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"g-elec-dispvalue"},{"addr":"g-gas-dispvalue"},{"addr":"g-water-dispvalue"}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"readRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+	 
+function queryUserAdmin(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"username","admin");
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"queryUser","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+
+function modifyAdmin1(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"username","admin");
+        jsonstr=addJsonObj(jsonstr,"password","admin");
+		jsonstr=addJsonObj(jsonstr,"nickname","管理员1");
+        jsonstr=addJsonObj(jsonstr,"email","admin@sohu.com");
+        jsonstr=addJsonObj(jsonstr,"mobile","111111111");
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"modifyUser","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+function modifyAdmin2(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"username","admin");
+		jsonstr=addJsonObj(jsonstr,"nickname","admin2");
+        jsonstr=addJsonObj(jsonstr,"password","管理员2");
+        jsonstr=addJsonObj(jsonstr,"email","admin@163.com");
+        jsonstr=addJsonObj(jsonstr,"mobile","111111111");
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"modifyUser","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+function queryAlarms(){
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=addJsonObj(jsonstr,"version","");
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"queryAlarms","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+}
+
+function queryAlarms2(){
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=addJsonObj(jsonstr,"version","2014-09-26 18:27:00");
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"queryAlarms","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+}
+
+function confirmAlarms(){
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr + ',"alarms":[{"addr":"z-1111111"},{"addr":"z-1111112"}]'
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"confirmAlarms","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+}
+
+function confirmAllAlarms(){
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr + ',"alarms":[]'
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"confirmAlarms","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+}
+
+
+function writeRTData_TVLearn(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"z-557B4501004B1282","type":"TV","value":{"mode":"0","key":"3"}}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"writeRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+			   var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+		});
+}
+function writeRTData_TVControl(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"z-557B4501004B12811234","type":"TV","value":{"mode":"1","key":"3"}}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"writeRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+			   var strTip=JSON.stringify(data);
+			 	strTip = strTip + ",TV:z-557B4501004B12811234";
+			 	tip(strTip);
+			 }
+			});
+}
+
+function writeRTData_AirControl(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"z-557B4501004B1283","type":"AirCondition","value":{"mode":"1","key":"32"}}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"writeRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+			   var strTip=JSON.stringify(data);
+			   strTip = strTip + ",AirCondition-557B4501004B1283";
+			 	tip(strTip);
+			 }
+			});
+}
+
+
+function writeRTData_Curtain(stateVal){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"host",hostId);
+		jsonstr=jsonstr+',"devices":'+'[{"addr":"z-557B4501004B12541234","type":"Curtain","value":{"state":"'+stateVal+'"}}]';
+		$.ajax({
+			 url: serverurl,  
+			 type: "POST",
+			 async : false,
+			 data:'{"service":"ihome","method":"writeRTData","param":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+			   var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+}
+
+function getHostName(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"host",hostId);
+	$.ajax({
+		 url: serverurl,  
+		 type: "POST",
+		 async : false,
+		 data:'{"service":"ihome","method":"getHostName","param":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){  
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function changeHostName(newhostname){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"host",hostId);
+	jsonstr=addJsonObj(jsonstr,"hostname",newhostname);
+	$.ajax({
+		 url: serverurl,  
+		 type: "POST",
+		 async : false,
+		 data:'{"service":"ihome","method":"changeHostName","param":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){  
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function loginAdmin(){      
+		var jsonstr="";
+		jsonstr=addJsonObj(jsonstr,"username","admin");
+        jsonstr=addJsonObj(jsonstr,"password","admin");
+		$.ajax({
+			 url: "/auth/login",
+			 type: "POST",
+			 async : false,
+			 data:'{"sparam":{' + jsonstr + '}}',
+			 dataType: "json",
+			 error: function(data){  
+                tip(data.responseText); 
+			 },  
+			 success: function(data){//如果调用php成功    
+                var strTip=JSON.stringify(data);
+			 	tip(strTip);
+			 }
+			});
+	 }
+
+
+function resetPwd(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"password","nimda");
+	jsonstr=addJsonObj(jsonstr,"username","admin");
+	$.ajax({
+		 url: "/auth/resetpassword",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function showLinkAction(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"addr","z-347D4501004B12001234");
+	$.ajax({
+		 url: "/plan/show",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function updateLinkAction(){
+
+	var updatestr='{"plan":{"addr":"z-347D4501004B12001234", "alarmAct":{"actList":{"actable":"0","deviceAddr":"z-227D4501004B12001234","devicetype":"Light1","devicename": "二联灯", "params":{"state":"0","state2":"1","state3":"0","state4":"1"}}}}}';
+
+	$.ajax({
+		 url: "/plan/update",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":' + updatestr + '}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function modifyproperty(){
+	var jsonstr='{"detail":{"hostId":"hostIdValue","name":"modified_name","email":"modified_emale@boer.com"}}';
+	$.ajax({
+		 url: "/auth/modifyproperty",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":' + jsonstr + '}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function showproperty(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"hostId","hostIdValue");
+	$.ajax({
+		 url: "/auth/showproperty",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function showalarm(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"confirm",1);
+	jsonstr=addJsonObj(jsonstr,"page",1);
+	jsonstr=addJsonObj(jsonstr,"pagenum",10);
+	$.ajax({
+		 url: "/warning/show",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function confirmalarmdevice(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"device","z-alarm1");
+	$.ajax({
+		 url: "/alarm/confirm",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function confirmallalarm(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"all","1");
+	$.ajax({
+		 url: "/alarm/confirm",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function controldevice(){
+	var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"host",hostId);
+	jsonstr=jsonstr+',"devices":'+'[{"addr":"z-557B4501004B12541234","type":"Curtain","value":{"state":"1"}}]';
+	$.ajax({
+		 url: "/device/cmd",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function removedevice(){
+	var jsonstr="";
+	jsonstr='"devices":'+'[{"addr":"z-227D4501004B12001234"},{"addr":"z-117D4501004B12001234"}]';
+	$.ajax({
+		 url: "/device/remove",
+		 type: "POST",
+		 async : false,
+		 data:'{"sparam":{' + jsonstr + '}}',
+		 dataType: "json",
+		 error: function(data){
+            tip(data.responseText); 
+		 },  
+		 success: function(data){//如果调用php成功    
+		   var strTip=JSON.stringify(data);
+		 	tip(strTip);
+		 }
+		});
+}
+
+function updatedeviceprop() {
+    var jsonstr = "";
+    jsonstr = '{"device":{"name":"updatedeviceprop","type":"Light1","roomId":"1","addr":"z-007D4501004B12001234","value": {"state":"0"}, "linkaction":{"linkdev":"z_227D4501004B12001234", "actionName":"晨起", "actionRoom":"主卧"}}}';
+    $.ajax({
+               url: "/device/updateprop",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+function showdevicepropsroom() {
+    var jsonstr = ""
+    jsonstr = addJsonObj(jsonstr, "roomId", "1");
+    jsonstr = addJsonObj(jsonstr, "areaId", "1");
+    $.ajax({
+               url: "/device/properties",
+               type: "POST",
+               async: false,
+               data: '{"sparam":{' + jsonstr + '}}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+function showdevicepropstype() {
+    var jsonstr = ""
+    jsonstr = addJsonObj(jsonstr, "type", "Light1");
+    $.ajax({
+               url: "/device/properties",
+               type: "POST",
+               async: false,
+               data: '{"sparam":{' + jsonstr + '}}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+function showdevicestatus() {
+    var jsonstr = ""
+    jsonstr = '{"devices":[{"addr":"z-117D4501004B12001234"},{"addr":"z-227D4501004B12001234"}]}'
+    $.ajax({
+               url: "/device/status",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' +  jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function showroom() {
+    var jsonstr = ""
+    jsonstr = '{"roomId":"1"}'
+    $.ajax({
+               url: "/room/show",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function removeroom() {
+    var jsonstr = ""
+    jsonstr = '{"roomId":"1"}'
+    $.ajax({
+               url: "/room/remove",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function updateroom() {
+    var jsonstr = ""
+    jsonstr = '{"room":{"name":"客厅","roomId":"1","timestamp":"1024","areas":[{"1":"a1","2":"a2"}]}}'
+    $.ajax({
+               url: "/room/update",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function showarea() {
+    var jsonstr = ""
+    jsonstr = '{"roomId":"1", "areaId":"1"}'
+    $.ajax({
+               url: "/room/showarea",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function removearea() {
+    var jsonstr = ""
+    jsonstr = '{"roomId":"1","areaId":"1"}'
+    $.ajax({
+               url: "/room/removearea",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function updatearea() {
+    var jsonstr = ""
+    jsonstr = '{"area":{"name":"客厅","roomId":"1","areaId":"1","timestamp":"1024","imageurl":"area_bg.png"}}'
+    $.ajax({
+               url: "/room/updatearea",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function showmoderoom() {
+    var jsonstr = ""
+    jsonstr = '{"roomId":"1", "areaId":"1"}'
+    $.ajax({
+               url: "/room/showmode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function showmodeglobal() {
+    var jsonstr = ""
+    jsonstr = '{}'
+    $.ajax({
+               url: "/room/showmode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function removemode() {
+    var jsonstr = ""
+    jsonstr = '{"roomId":"1","areaId":"area1"}'
+    $.ajax({
+               url: "/room/removemode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function updatemode() {
+    var jsonstr = ""
+    jsonstr = '{"mode":{"name":"晨起","roomId":"1","alarmAct":{"actList":[{"actable":0,"deviceAddr":"z-227D4501004B12001234","devicetype":"Light1","devicename":"灯","params":{"state":"1","state2":"0","state3":"1","state4":"0","state5":"1"}}]}}}'
+    $.ajax({
+               url: "/room/updatemode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+function updatemodeglobal() {
+    var jsonstr = ""
+    jsonstr = '{"mode":{"name":"离家模式","alarmAct":{"actList":[{"actable":0,"deviceAddr":"z-227D4501004B12001234"," devicetype":"Light1","devicename":"灯","params":{"state":"1","state2":"0","state3":"1","state4":"0","state5":"1"}}]}}}'
+    $.ajax({
+               url: "/room/updatemode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+function activemodelijs() {
+    var jsonstr = ""
+    jsonstr = '{"name":"离家模式"}'
+    $.ajax({
+               url: "/room/activemode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+function removemode() {
+    var jsonstr = ""
+    jsonstr = '{"name":"晨起","roomId":"1"}'
+    $.ajax({
+               url: "/room/removemode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+
+function activemodecq() {
+    var jsonstr = ""
+    jsonstr = '{"name":"晨起","roomId":"1"}'
+    $.ajax({
+               url: "/room/activemode",
+               type: "POST",
+               async: false,
+               data: '{"sparam":' + jsonstr + '}',
+               dataType: "json",
+               error: function (data) {
+                   tip(data.responseText);
+               },
+               success: function (data) {//如果调用php成功
+                   var strTip = JSON.stringify(data);
+                   tip(strTip);
+               }
+           });
+}
+
+function scanZigbee(typename){
+    var jsonstr="";
+	jsonstr=addJsonObj(jsonstr,"type",typename);
+	$.ajax({
+        url: "/device/scan",
+        type: "POST",
+        async : false,
+        data:'{"sparam":{' + jsonstr + '}}',
+        dataType: "json",
+        error: function(data){
+            tip(data.responseText);
+        },
+        success: function(data){
+            tip(JSON.stringify(data));
+        }
+    });
+}
+
+</script>
+</head>
+
+<body>
+<div>Host API example</div>
+	<div>
+		<input type="button" value="readAllConfig" onclick="javascript:readAllConfig()" id="readAllConfig"/>
+		<input type="button" value="writeAllConfig" onclick="javascript:writeAllConfig()" id="writeAllConfig"/>
+	</div>
+    <div>
+        <input type="button" value="readRTData" onclick="javascript:readRTData()" id="readRTData"/>
+        <input type="button" value="writeRTData_Open" onclick="javascript:writeRTData_Open()" id="writeRTData_Open"/>
+        <input type="button" value="writeRTData_Close" onclick="javascript:writeRTData_Close()" id="writeRTData_Close"/>
+		 <input type="button" value="writeRTData_TVLearn" onclick="javascript:writeRTData_TVLearn()" id="writeRTData_TV3Learn"/>
+		 <input type="button" value="writeRTData_TVControl" onclick="javascript:writeRTData_TVControl()" id="writeRTData_TVControl"/>
+		 <input type="button" value="writeRTData_AirControl" onclick="javascript:writeRTData_AirControl()" id="writeRTData_AirControl"/>
+		 <input type="button" value="writeRTData_Curtain.Open" onclick="javascript:writeRTData_Curtain('1')" id="writeRTData_Curtain.Open"/>
+		 <input type="button" value="writeRTData_Curtain.Close" onclick="javascript:writeRTData_Curtain('2')" id="writeRTData_Curtain.Close"/>
+		 <input type="button" value="writeRTData_Curtain.Pause" onclick="javascript:writeRTData_Curtain('3')" id="writeRTData_Curtain.Pause"/>
+	     <input type="button" value="readHouseRTData" onclick="javascript:readHouseRTData()" id="readHouseRTData"/>
+    </div>
+
+    </div>
+        <input type="button" value="queryUserAdmin" onclick="javascript:queryUserAdmin()" id="queryUserAdmin"/>
+        <input type="button" value="modifyAdmin1" onclick="javascript:modifyAdmin1()" id="modifyAdmin1"/>
+        <input type="button" value="modifyAdmin2" onclick="javascript:modifyAdmin2()" id="modifyAdmin2"/>
+    </div>
+    <div>
+        <input type="button" value="queryAlarms" onclick="javascript:queryAlarms()" id="queryAlarms"/>
+        <input type="button" value="queryAlarms2" onclick="javascript:queryAlarms2()" id="queryAlarms2"/>
+        <input type="button" value="confirmAlarms" onclick="javascript:confirmAlarms()" id="confirmAlarms"/>
+        <input type="button" value="confirmAllAlarms" onclick="javascript:confirmAllAlarms()" id="confirmAllAlarms"/>
+        <input type="button" value="getHostName" onclick="javascript:getHostName()" id="getHostName"/>
+        <input type="button" value="changeNameToHostA" onclick="javascript:changeHostName('HostA')" id="changeNameToHostA"/>
+        <input type="button" value="changeNameToHostB" onclick="javascript:changeHostName('HostB')" id="changeNameToHostB"/>
+		
+    </div>        
+    <div>
+        <input type="button" value="loginAdmin" onclick="javascript:loginAdmin()" id="loginAdmin"/>
+        <input type="button" value="resetpassword" onclick="javascript:resetPwd()" id="resetpassword"/>
+		<input type="button" value="showLinkAction" onclick="javascript:showLinkAction()" id="showLinkAction"/>
+		<input type="button" value="updateLinkAction" onclick="javascript:updateLinkAction()" id="updateLinkAction"/>
+		<input type="button" value="modifyproperty" onclick="javascript:modifyproperty()" id="modifyproperty"/>
+		<input type="button" value="showproperty" onclick="javascript:showproperty()" id="showproperty"/>
+    </div>
+    <div>
+        <input type="button" value="showalarm" onclick="javascript:showalarm()" id="showalarm"/>
+        <input type="button" value="confirmalarmdevice" onclick="javascript:confirmalarmdevice()" id="confirmalarmdevice"/>
+        <input type="button" value="confirmalarmall" onclick="javascript:confirmalarmall()" id="confirmalarmall"/>
+        <input type="button" value="controldevice" onclick="javascript:controldevice()" id="controldevice"/>
+        <input type="button" value="removedevice" onclick="javascript:removedevice()" id="removedevice"/>
+        <input type="button" value="updatedeviceprop" onclick="javascript:updatedeviceprop()" id="updatedeviceprop"/>
+        <input type="button" value="showdevicepropsroom" onclick="javascript:showdevicepropsroom()" id="showdevicepropsroom"/>
+        <input type="button" value="showdevicepropstype" onclick="javascript:showdevicepropstype()" id="showdevicepropstype"/>
+        <input type="button" value="showdevicestatus" onclick="javascript:showdevicestatus()" id="showdevicestatus"/>
+    </div>
+    <div>
+        <input type="button" value="showroom" onclick="javascript:showroom()" id="showroom"/>
+        <input type="button" value="updateroom" onclick="javascript:updateroom()" id="updateroom"/>
+        <input type="button" value="removeroom" onclick="javascript:removeroom()" id="removeroom"/>
+        <input type="button" value="showarea" onclick="javascript:showarea()" id="showarea"/>
+        <input type="button" value="updatearea" onclick="javascript:updatearea()" id="updatearea"/>
+        <input type="button" value="removearea" onclick="javascript:removearea()" id="removearea"/>
+        <input type="button" value="showmoderoom" onclick="javascript:showmoderoom()" id="showmoderoom"/>
+        <input type="button" value="showmodeglobal" onclick="javascript:showmodeglobal()" id="showmodeglobal"/>
+        <input type="button" value="updatemode" onclick="javascript:updatemode()" id="updatemode"/>
+        <input type="button" value="updatemodeglobal" onclick="javascript:updatemodeglobal()" id="updatemodeglobal"/>
+        <input type="button" value="removemode" onclick="javascript:removemode()" id="removemode"/>
+        <input type="button" value="activemodelijs" onclick="javascript:activemodelijs()" id="activemodelijs"/>
+        <input type="button" value="activemodecq" onclick="javascript:activemodecq()" id="activemodecq"/>
+    </div>
+    <dev>
+        <input type="button" value="scanZigbee" onclick="javascript:scanZigbee('')" id="scanZigbee"/>
+		<input type="button" value="scanLight1" onclick="javascript:scanZigbee('Light1')" id="scanLight1"/>
+		<input type="button" value="scanLightAdjust" onclick="javascript:scanZigbee('LightAdjust')" id="scanLightAdjust"/>
+		<input type="button" value="scanTV" onclick="javascript:scanZigbee('TV')" id="scanTV"/>
+		<input type="button" value="scanDVD" onclick="javascript:scanZigbee('DVD')" id="scanDVD"/>
+    </dev>
+</div>
+<div id="errortip" style="height:400px"></div>
+</body>
+</html>

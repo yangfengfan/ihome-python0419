@@ -1,0 +1,22 @@
+package schemas;
+
+
+option java_package = "com.segmetics.ng.protocol.message";
+//type 000300
+message DeviceCommandProto {
+    required string msgId = 1; //消息ID全局唯一，hash
+    required int32 version = 2;
+    required string hostId = 3;
+    required int32 cmdType = 4;
+    optional string payload = 5;
+}
+//type 00301
+message DeviceCommandResProto {
+    required string msgId = 1;
+    required int32 version = 2;
+    required string hostId = 3;
+    required string cmdId = 4; //#对应的command msgId
+    required string result = 5; //命令执行结果
+    optional string payload = 6; //响应数据
+    optional int32 cmdType = 7; //
+}

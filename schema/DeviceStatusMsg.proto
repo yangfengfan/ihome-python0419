@@ -1,0 +1,13 @@
+package schemas;
+
+
+option java_package = "com.segmetics.ng.protocol.message";
+
+// type 00100
+message DeviceStatusProto {
+    required string msgId = 1; //消息ID全局唯一，hash
+    required int32 version = 2;
+    required string hostId = 3;
+    required string dataType = 4;
+    required string payload = 5;
+}
