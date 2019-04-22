@@ -459,8 +459,8 @@ class SocketHandlerServer(ThreadBase):
 
         # 设置定时任务
         elif cmdType == GlobalVars.TYPE_CMD_SET_TIME_TASK:
-            return ErrorCode.ERR_TEMPORARILY_NO_TIMING_FUNCTION, None
-        # self.set_time_task(payload)
+            # return ErrorCode.ERR_TEMPORARILY_NO_TIMING_FUNCTION, None
+            return self.set_time_task(payload)
 
         # 设置定时任务
         elif cmdType == GlobalVars.TYPE_CMD_SWITCH_TIME_TASK:
@@ -611,91 +611,70 @@ class SocketHandlerServer(ThreadBase):
                 oldtimestamp = hostProp.get("timestamp")
             DBManagerHostId().updateHostConfig(hostProp.get("hostId"), hostProp.get("name"), hostProp, oldtimestamp)
 
+            dbf = open('/ihome/etc/host.db', 'rb')                 # 二进制方式打开图文件
+            src_content = dbf.read()
+            base64_src = base64.b64encode(src_content)  # 读取文件内容，转换为base64编码
+            dbf.close()
 
-            root = "/ihome/etc/"
-            pathl = []
-            for dirpath, dirnames, filenames in os.walk(root):
-                Utils.logError('--------------dirpath===========%s' % (dirpath))
-                Utils.logError('--------------filenames===========%s' % (filenames))
-                for filepath in filenames:
-                    Utils.logError('--------------filepath.__contains===========%s' % (filepath.__contains__('host2M.log')))
-                    Utils.logError('--------------os.path.join(dirpath, filepath)===========%s' % (os.path.join(dirpath, filepath)))
-                    if filepath.__contains__('host2M.log'):
-                        Utils.logError('----------')
-                        pathl.append(os.path.join(dirpath, filepath))
-                        Utils.logError('--------------log===========%s' % str(pathl))
+            # backupfile = '/ihome/backup.txt'
+            # outputf = open(backupfile, 'w')
+            # outputf.write(base64dbf)
+            # outputf.close()
 
-            pathl.append('/ihome/etc/host.db')
-            Utils.logError('--------------log===========%s' % str(pathl))
-            for i in pathl:
-                # dbf = open('/ihome/etc/host.db', 'rb')                 # 二进制方式打开图文件
-                dbf = open(i, 'rb')
-                src_content = dbf.read()
-                base64_src = base64.b64encode(src_content)  # 读取文件内容，转换为base64编码
-                dbf.close()
+            url = "https://" + GlobalVars.SERVER_URL + ":8080/config/upload?hostId=" + hostId
+            # dbfile = '/ihome/etc/host.db'
 
-                # backupfile = '/ihome/backup.txt'
-                # outputf = open(backupfile, 'w')
-                # outputf.write(base64dbf)
-                # outputf.close()
+            # if os.path.exists(backupfile) == False:
+            #     return (ErrorCode.ERR_GENERAL, None)
 
-                url = "https://" + GlobalVars.SERVER_URL + ":8080/config/upload?hostId=" + hostId
-                # dbfile = '/ihome/etc/host.db'
+            # md5 = self.checkMD5(backupfile)
+            src_md5 = hashlib.md5(src_content).hexdigest()
 
-                # if os.path.exists(backupfile) == False:
-                #     return (ErrorCode.ERR_GENERAL, None)
+            boundary = '----------%s' % hex(int(time.time() * 1000))
+            data = []
+            data.append('--%s' % boundary)
 
-                # md5 = self.checkMD5(backupfile)
-                src_md5 = hashlib.md5(src_content).hexdigest()
+            data.append('Content-Disposition: form-data; name="%s"\r\n' % 'md5')
+            data.append(src_md5)
+            data.append('--%s' % boundary)
 
-                boundary = '----------%s' % hex(int(time.time() * 1000))
-                data = []
-                data.append('--%s' % boundary)
+            # fr=open(backupfile,'rb')
+            data.append('Content-Disposition: form-data; name="%s"; filename="host.db"' % 'config')
+            data.append('Content-Type: %s\r\n' % 'application/octet-stream')
+            # data.append(fr.read())
+            data.append(base64_src)
+            # fr.close()
+            data.append('--%s--\r\n' % boundary)
 
-                data.append('Content-Disposition: form-data; name="%s"\r\n' % 'md5')
-                data.append(src_md5)
-                data.append('--%s' % boundary)
+            # http_url='http://remotserver.com/page.php'
+            http_body = '\r\n'.join(data)
 
-                # fr=open(backupfile,'rb')
-                data.append('Content-Disposition: form-data; name="%s"; filename="host.db"' % 'config')
-                data.append('Content-Type: %s\r\n' % 'application/octet-stream')
-                # data.append(fr.read())
-                data.append(base64_src)
-                # fr.close()
-                data.append('--%s--\r\n' % boundary)
+            try:
+                # buld http request
+                req=urllib2.Request(url, data=http_body)
+                # header
+                req.add_header('Content-Type', 'multipart/form-data; boundary=%s' % boundary)
+                req.add_header('User-Agent', 'Mozilla/5.0')
+                # req.add_header('Referer','http://remotserver.com/')
+                # post data to server
+                if pyversion >= (2,7,9):
+                    resp = urllib2.urlopen(req, context=ssl._create_unverified_context(), timeout=5)
+                else:
+                    resp = urllib2.urlopen(req, timeout=5)
+                # get response
+                resp.read()
+                Utils.logInfo('====upload db file success!======')
 
-                # http_url='http://remotserver.com/page.php'
-                http_body = '\r\n'.join(data)
-
-                try:
-                    # buld http request
-                    req=urllib2.Request(url, data=http_body)
-                    # header
-                    req.add_header('Content-Type', 'multipart/form-data; boundary=%s' % boundary)
-                    req.add_header('User-Agent', 'Mozilla/5.0')
-                    # req.add_header('Referer','http://remotserver.com/')
-                    # post data to server
-                    if pyversion >= (2,7,9):
-                        # Utils.logError("---------------------req:=%s" % src_content)
-                        resp = urllib2.urlopen(req, context=ssl._create_unverified_context(), timeout=5)
-                    else:
-                        resp = urllib2.urlopen(req, timeout=5)
-                    # get response
-                    resp.read()
-                    Utils.logInfo('====upload db file success!======')
-
-
-                except:
-                    Utils.logError('upload db file error.')
-            # 上传成功：更新网关属性的备份时间
-            hostProp = DBManagerHostId().getHost()
-            hostProp["lastbackup"] = int(time.time())
-            oldtimestamp = None
-            if hostProp.has_key("timestamp"):
-                oldtimestamp = hostProp.get("timestamp")
-            ret = DBManagerHostId().updateHostConfig(hostProp.get("hostId"), hostProp.get("name"), hostProp,
-                                                     oldtimestamp)
-            return (ErrorCode.SUCCESS, ret)
+                # 上传成功：更新网关属性的备份时间
+                hostProp = DBManagerHostId().getHost()
+                hostProp["lastbackup"] = int(time.time())
+                oldtimestamp = None
+                if hostProp.has_key("timestamp"):
+                    oldtimestamp = hostProp.get("timestamp")
+                ret=DBManagerHostId().updateHostConfig(hostProp.get("hostId"), hostProp.get("name"), hostProp, oldtimestamp)
+                return (ErrorCode.SUCCESS, ret)
+            except:
+                Utils.logError('upload db file error.')
         except:
             Utils.logError('Error when uploading db file.')
 
@@ -1612,7 +1591,7 @@ class SocketHandlerServer(ThreadBase):
                 if time_task:
                     mode["timeTask"] = time_task
 
-        Utils.logError('-------queryRoomMode*******mode_dict=%s----------' % (mode_dict))
+        # Utils.logError('-------queryRoomMode*******mode_dict=%s----------' % (mode_dict))
         return ret, mode_dict
     
     def validateMode(self, mode):

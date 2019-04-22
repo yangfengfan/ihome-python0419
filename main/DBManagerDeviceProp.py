@@ -660,7 +660,7 @@ class DBManagerDeviceProp(object):
         devices = self.getDevicePropertyBy(None, None, "all")
         if devices is not None and len(devices) > 0:
             for device in devices:
-                Utils.logError('--------device====== %s' % str(device))
+                # Utils.logError('--------device====== %s' % str(device))
                 if device.get("roomId") == roomId:
                     device['dismiss'] = True
                     self._dismissDevice(device)
@@ -668,7 +668,7 @@ class DBManagerDeviceProp(object):
                     if device.get("linkOnlyOneSwitch").get("deviceProp"):
                         if device.get("linkOnlyOneSwitch").get("deviceProp").get("roomId") == roomId:
                             device.pop("linkOnlyOneSwitch")
-                            Utils.logError('--------device===device=== %s' % str(device))
+                            # Utils.logError('--------device===device=== %s' % str(device))
                 if device.get("linkLightSensor"):
                     if device.get("linkLightSensor").get("deviceProp"):
                         if device.get("linkLightSensor").get("deviceProp").get("roomId") == roomId:

@@ -139,9 +139,9 @@ class DBManagerRoomArea(object):
 
                     if devices is not None and len(devices) > 0:
                         for device in devices:
-                            Utils.logError('--------device====== %s' % str(device))
+                            # Utils.logError('--------device====== %s' % str(device))
                             if device.get("roomId") == room and device.get("areaId") == area:
-                                Utils.logError('--------device["areaname"]====== %s' % str(device["areaname"]))
+                                # Utils.logError('--------device["areaname"]====== %s' % str(device["areaname"]))
                                 device["areaname"] = newName
                             if device.get("linkOnlyOneSwitch"):
                                 if device.get("linkOnlyOneSwitch").get("deviceProp"):

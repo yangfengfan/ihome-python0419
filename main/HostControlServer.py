@@ -604,15 +604,18 @@ class HostControlServer(SocketThreadBase):
                         device_status = link_light_sensor.get("deviceStatus", None)
                         if device_status is not None:
                             ray_address = device_status.get("addr", None)
-                            ray_normal_low = 100
+                            ray_normal_low = 10
                             ray_normal_high = 1000
                             adjust_type = 0
                             zx_file = '/ihome/etc/zx'
                             if os.path.exists(zx_file) == True:
                                 adjust_type = 1
                             cur_ray = DBManagerDevice().getDeviceByDevId(ray_address)
+                            Utils.logError("--------cur_ray------%s" % cur_ray)
                             value_ray = cur_ray.get("value", {})
+                            Utils.logError("--------value_ray------%s" % value_ray)
                             ray = value_ray.get("ray", None)
+                            Utils.logError("--------ray------%s" % ray)
                             Utils.logError("ray_sense_value is: %s" % ray)
                             global brightness, colortemp
                             if ray is not None:
@@ -633,14 +636,19 @@ class HostControlServer(SocketThreadBase):
                                     else:
                                         time_int = (time.localtime().tm_min % 2) * 100 + time.localtime().tm_sec
                                         brightness, colortemp = DBManagerPannelRateZxl().queryByTime(time_int)
+                                Utils.logError("ray colortemp is: %s" % colortemp)
+                                Utils.logError("ray brightness is: %s" % brightness)
+                            else:
+                                time_int = (time.localtime().tm_min % 2) * 100 + time.localtime().tm_sec
+                                brightness, colortemp = DBManagerPannelRateZxh().queryByTime(time_int)
+                                Utils.logError("colortemp is: %s" % colortemp)
+                                Utils.logError("brightness is: %s" % brightness)
                     else:  # 无光感绑定时
                         time_int = time.localtime().tm_hour * 100 + time.localtime().tm_min
                         brightness, colortemp = DBManagerPannelRate().queryByTime(time_int)
                     value['coldRate'] = colortemp
                     value['warmRate'] = brightness
                     deviceVal['value'] = value
-                    Utils.logError("colortemp is: %s" % colortemp)
-                    Utils.logError("brightness is: %s" % brightness)
                 Utils.logError("--------------------------------------------------deviceVal: %s" % deviceVal)
             except:
                 Utils.logError('Error when read zx')

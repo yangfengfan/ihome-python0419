@@ -1109,9 +1109,9 @@ class PacketParser:
 
             elif DEVTYPEID_WUHENG_SYSTEM == devTypeId:  # 五恒系统
                 addrIndex = int(value.get("addrIndex", "1"))
-                # 2-运行状态(0关1开)；3-模式(0关，1制冷，2制热，3除湿，4通风)；4-调整风量(1低俗，2中速，3高速)；5-控温(16~35度)
+                # 2-运行状态(0关1开)；3-模式(0关，1制冷，2制热，3除湿，4通风, 5加湿)；4-调整风量(1低俗，2中速，3高速)；5-控温(16~35度)
                 cmd = int(value.get("cmd", "4"))
-                data = int(value.get("data"))
+                data = int(value.get("data", "0"))
                 bodyBuffer = struct.pack("=4B10s", addrIndex, cmd, 1, data, "")
 
             elif DEVTYPEID_FLOOR_HEATING == devTypeId:  # 非3.5寸屏接入的地暖
